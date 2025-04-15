@@ -16,50 +16,11 @@ cursor = conn.cursor()
 # 选择数据库
 conn.select_db("test")
 
-# name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
-# project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
-name = '湖北省体育产业集团办公楼装修工程'
-project_id = '110619cf-e20e-24f9-c880-627b63ad3702'
+name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
+project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
-# 1.专项分包计划数量
-sql = "select ifnull(num,0) from Contracts  where name='%s'" % (name)
-cursor.execute(sql)
-result = cursor.fetchall()
-if result == ():
-    result = (('0', '0'), ())
-data = result[0]
-nvbh = data[0]
-Contracts_number = ""
-Contracts_num = nvbh + "-%"
-sql2 = "select count(*) from subcontract_budget_items  where name like '%s'" % (Contracts_num)
-cursor.execute(sql2)
-result = cursor.fetchall()
-if result == ():
-    result = (('0', '0'), ())
-data = result[0]
-Contracts_number = int(data[0] or 0)
-
-# 项目回款率
-sql = "select income from Project_Budgets where Project_id='%s'" % (project_id)
-cursor.execute(sql)
-result = cursor.fetchall()
-if result == ():
-    result = (('0', '0'), ())
-data = result[0]
-sr = int(data[0] or 0)
-
-sql = "select sum(amount) as amount   from Collections  where project_id='%s' and ar_type='ARs'" % (project_id)
-cursor.execute(sql)
-result = cursor.fetchall()
-if result == ():
-    result = (('0', '0'), ())
-data = result[0]
-ysje = int(data[0] or 0)
-a = ysje / sr
-xmhk = int(a * 10000) / 100
-xmhkl = f"{xmhk}%"  # 结果为 "96.49%"
-
-print(Contracts_number, xmhkl)
+# name = '湖北省体育产业集团办公楼装修工程'
+# project_id = '110619cf-e20e-24f9-c880-627b63ad3702'
 
 # 工程收入--计划金额、销项税
 sql = "select income, output_tax from Project_Budgets  where project_id=(select id from project where name = '%s')" % (
@@ -69,7 +30,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-income = float(data[0] or 0)  # 计划金额
+gcsr_jhje = float(data[0] or 0)  # 计划金额
 gcsr_xxs = float(data[1] or 0)  # 销项税
 
 # 工程收入--合同金额、销项税
@@ -110,7 +71,7 @@ gcsr_ssje_xxs = float(data[0] or 0)  # 销项税
 dsje = round(gcsr_htje - gcsr_ssje, 2)
 djxxs = round((gcsr_xxs - gcsr_ssje_xxs), 2)
 
-print(income, gcsr_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, dsje, djxxs)
+print(gcsr_jhje, gcsr_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, dsje, djxxs)
 
 # 专项分包金额-计划金额、进项税
 sql = "select amount,vat from subcontract_budgets  where project_id='%s'" % (project_id)
@@ -441,3 +402,120 @@ sfje_jxs_xj = round(
 djkjjs_xj = ddkjxs
 
 print(jhje_xj, jhje_jxs_xj, htje_xj, htje_jxs_xj, sfje_xj, sfje_jxs_xj, djkjjs_xj)
+
+print("===========================")
+# 1.专项分包计划数量
+sql = "select ifnull(num,0) from Contracts  where name='%s'" % (name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+nvbh = data[0]
+Contracts_number = ""
+Contracts_num = nvbh + "-%"
+sql2 = "select count(*) from subcontract_budget_items  where name like '%s'" % (Contracts_num)
+cursor.execute(sql2)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+Contracts_number = int(data[0] or 0)
+
+# 2.项目回款率
+sql = "select income from Project_Budgets where Project_id='%s'" % (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+sr = int(data[0] or 0)
+
+sql = "select sum(amount) as amount   from Collections  where project_id='%s' and ar_type='ARs'" % (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+ysje = int(data[0] or 0)
+a = ysje / sr
+xmhk = int(a * 10000) / 100
+xmhkl = f"{xmhk}%"  # 结果为 "96.49%"
+
+
+
+#3.形象进度
+sql="select progress from Project_Week_Logs  where project_id='%s' order by date_end desc limit 1"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+a = data[0]  # 计划金额
+xxjd = f"{a}%"
+
+#4.计划金额与实际金额百分百
+sql = "select income, output_tax from Project_Budgets  where project_id=(select id from project where name = '%s')" % (
+    name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kb_jhje = float(data[0] or 0)  # 计划金额
+
+sql = "select sum(amount) as amount   from Collections  where project_id='%s' and ar_type='ARs'" % (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kb_ssje = float(data[0] or 0)  # 实收金额
+jhje_sjje_bfb=f"{(kb_ssje/kb_jhje)*100:.2f}%"
+
+
+#5.所有计划的计划税额与所有实际税额的百分比
+sql = "select input_tax from Project_Budgets where project_id='%s'"% (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kb_5_jhse = float(data[0] or 0)
+
+jhse_sjse_bfb=f"{(sfje_jxs_xj/kb_5_jhse)*100:.2f}%"
+
+#6.项目倒计时
+sql="SELECT CASE WHEN end_date <= CURDATE() THEN '已到达完工时间' ELSE CONCAT('剩余', DATEDIFF(end_date, CURDATE()), '天') END AS days_status FROM Project_Starts where project_id='%s'"% (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmdjs = data[0]
+if xmdjs==None:
+    xmdjs="用户未填写完工日期"
+
+#7.计划巡检次数与实际巡检次数对比
+sql="select count(*) from project_check_plans a INNER JOIN project_check_plan_items b on a.id=b.parent_id where a.project_id='%s'"% (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+jhxjcs = data[0]
+
+sql="select count(*) from project_checks where project_id='%s'"% (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+sjxjcs = data[0]
+
+jhxjcs_sjxjcs=f"{jhxjcs}:{sjxjcs}"
+
+
+print(Contracts_number, xmhkl,xxjd,jhje_sjje_bfb,jhse_sjse_bfb,xmdjs,jhxjcs_sjxjcs)
+
+print("=============================")
