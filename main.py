@@ -16,11 +16,14 @@ cursor = conn.cursor()
 # 选择数据库
 conn.select_db("test")
 
-name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
-project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
+# name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
+# project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
 # name = '湖北省体育产业集团办公楼装修工程'
 # project_id = '110619cf-e20e-24f9-c880-627b63ad3702'
+
+name='武汉新洲万达文旅项目B地块户内及公区精装修工程标段三'
+project_id = '3209e90a-6705-cd2b-ce30-67c54bcea55d'
 
 # 工程收入--计划金额、销项税
 sql = "select income, output_tax from Project_Budgets  where project_id=(select id from project where name = '%s')" % (
@@ -109,6 +112,8 @@ if result == ():
 data = result[0]
 zxfbje_sfje = float(data[0] or 0)
 
+
+
 sql = "select sum(vat) from Purchase_Invoices where project_id='%s'" % (project_id)
 cursor.execute(sql)
 result = cursor.fetchall()
@@ -116,6 +121,17 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 zxfbje_sfje_jxs = float(data[0] or 0)
+
+
+sql="select sum(amount),sum(tax) from Purchase_Orders where  project_id='%s'"% (project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+cgje_sfje= float(data[0] or 0)
+cgje_sfje_jxs= float(data[1] or 0)
+
 
 # 专项分包金额-待付款金额、待抵扣进项税
 sql = "select sum(payment_balance) from APs where project_id='%s'" % (project_id)
@@ -485,6 +501,7 @@ kb_5_jhse = float(data[0] or 0)
 
 jhse_sjse_bfb=f"{(sfje_jxs_xj/kb_5_jhse)*100:.2f}%"
 
+
 #6.项目倒计时
 sql="SELECT CASE WHEN end_date <= CURDATE() THEN '已到达完工时间' ELSE CONCAT('剩余', DATEDIFF(end_date, CURDATE()), '天') END AS days_status FROM Project_Starts where project_id='%s'"% (project_id)
 cursor.execute(sql)
@@ -519,3 +536,195 @@ jhxjcs_sjxjcs=f"{jhxjcs}:{sjxjcs}"
 print(Contracts_number, xmhkl,xxjd,jhje_sjje_bfb,jhse_sjse_bfb,xmdjs,jhxjcs_sjxjcs)
 
 print("=============================")
+
+#项目收入--项目收入、其他收入
+xmsr_xmsr=zxfbje_sfje  #项目收入
+
+
+sql="select ifnull(sum(amount),0) from Other_ARs where project_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmsr_qtsr = float(data[0])
+
+
+#项目支出--分包合同已付金额、分包合同未付金额、费用报销金额、开票税费、借款单余额
+xmzc_fbhtyfje=zxfbje_sfje #分包合同已付金额
+
+sql="select sum(recent_amount) from Subcontracts where project_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+zxhj = float(data[0])
+xmzc_fbhtwfje_str=f"{(zxhj-xmzc_fbhtyfje):.2f}" #分包合同未付金额
+xmzc_fbhtwfje=float(xmzc_fbhtwfje_str)
+
+sql="select ifnull(sum(expense_amount),0) from Expenses where project_id='%s' and approval_status='Approval'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmzc_fybxje = float(data[0])#费用报销金额
+
+sql="select sum(zksf) from ARs where project_id='%s' and approval_status='Approval'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmzc_kpsf = float(data[0])#开票税费
+
+sql="select ifnull(sum(balance),2) from Loans where  project_id='%s' and approval_status='Approval' "%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmzc_jkdye = float(data[0])#借款单余额
+
+#项目暂扣费--风险押金、履约保证金、资料押金、其他押金、居间费
+sql="select risk,deposit,other_deposit,pay_management_fee from project where name='%s'"%(name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+fxyj_bfb = data[0]
+xmzkf_fxyj_str = f"{(xmsr_xmsr * (fxyj_bfb / 100)):.2f}"#风险押金
+xmzkf_fxyj=float(xmzkf_fxyj_str)
+fxyj_zlyj = data[1] # 资料押金
+fxyj_qtyj = data[2]# 其他押金
+fxyj_qtyj = data[3]# 项目管理费
+
+xmzkf_lybzj=0 #履约保证金
+
+xmzkf_zlyj_str=f"{(xmsr_xmsr * (fxyj_zlyj / 100)):.2f}"#资料押金
+xmzkf_zlyj=float(xmzkf_zlyj_str)
+xmzkf_qtyj_str=f"{(xmsr_xmsr * (fxyj_qtyj / 100)):.2f}"#其他押金
+xmzkf_qtyj=float(xmzkf_qtyj_str)
+
+
+
+sql="select zkywf from project where name='%s' "%(name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+fxyj_jjf_bfb = data[0]
+xmzkf_xmsr=zxfbje_sfje
+xmzkf_fxyj_ze = f"{(xmzkf_xmsr * (fxyj_jjf_bfb / 100)):.2f}"
+
+xmzkf_jjf=float(xmzkf_fxyj_ze)-float(jjf_sfje)#居间费
+
+#项目垫资款-垫资款余额
+sql="select sum(balance) from entrusted_collections where parent_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+xmdzk_dzkye = float(data[0])#垫资款余额
+
+
+#进项税-已登记进项税
+jxs_ydjjxs=sfje_jxs_xj
+
+
+#管理费-已收管理费
+glf_xmsr_bfb=fxyj_qtyj
+glf_xmsr=zxfbje_sfje
+glf_ysglf_str = f"{(glf_xmsr * (glf_xmsr_bfb / 100)):.2f}"#风险押金
+glf_ysglf=float(glf_ysglf_str)
+
+
+#项目可用额度
+xmkyed=f"{(xmsr_xmsr+xmsr_qtsr+(xmzc_fbhtyfje+xmzc_fbhtwfje+xmzc_fybxje+xmzc_kpsf+xmzc_jkdye)-(xmzkf_fxyj+xmzkf_lybzj+xmzkf_zlyj+xmzkf_qtyj+xmzkf_jjf)+xmdzk_dzkye+jxs_ydjjxs-glf_ysglf):.2f}"
+
+
+
+print(xmsr_xmsr,xmsr_qtsr,xmzc_fbhtyfje,xmzc_fbhtwfje,xmzc_fybxje,xmzc_kpsf,xmzc_jkdye,xmzkf_fxyj,xmzkf_lybzj,xmzkf_zlyj,xmzkf_qtyj,xmzkf_jjf,xmdzk_dzkye,jxs_ydjjxs,glf_ysglf,xmkyed)
+
+#看板下部_项目状态
+sql="select stage from project where name='%s'"%(name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_xmzt_status =data[0]#项目状态
+kbxb_xmzt=""
+if kbxb_xmzt_status =="started":
+    kbxb_xmzt="已开始"
+if kbxb_xmzt_status =="not_started":
+    kbxb_xmzt = "未开始"
+if kbxb_xmzt_status =="seal":
+    kbxb_xmz = "已封账"
+if kbxb_xmzt_status =="ended":
+    kbxb_xmzt= "已竣工"
+if kbxb_xmzt_status =="settled":
+    kbxb_xmzt= "已结算"
+if kbxb_xmzt_status =="checked":
+    kbxb_xmzt= "已完工"
+
+
+#分包合同已付比例
+kbxb_htje=zxfbje_htje
+kbxb_yfje=zxfbje_sfje
+
+
+kbxb_fbhtyfbl=f"{(kbxb_yfje/kbxb_htje)*100:.2f}%"
+
+#借款余额
+sql="select ifnull(sum(balance),0) from Loans where project_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_jkye = float(data[0])#借款余额
+
+#计税方式
+sql="select tax_calculation_method from project where name='%s'"%(name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_jsfs_code = float(data[0])
+kbxb_jsfs=""#计税方式
+if kbxb_jsfs_code ==1:
+    kbxb_jsfs='简易计税'
+if kbxb_jsfs_code ==2:
+    kbxb_jsfs='一般计税'
+
+# #劳务合同比例
+sql="select count(*) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_htzs=float(data[0]) #合同总数
+
+sql="select count(b.tax_rate) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =3.00 GROUP BY b.tax_rate ORDER BY tax_rate"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_lw_ht_sl=float(data[0]) #%3劳务合同数量
+
+kbxb_lw_ht=f"{(kbxb_lw_ht_sl/kbxb_htzs)*100:.2f}%"
+
+
+
+
+
+
+print(kbxb_xmzt,kbxb_fbhtyfbl,kbxb_jkye,kbxb_jsfs,kbxb_lw_ht)
