@@ -1,6 +1,6 @@
 # 导入pymysql模块
 import pymysql
-
+import json
 # 建立数据库连接
 conn = pymysql.connect(
     host='120.26.141.56',  # 主机名（或IP地址）
@@ -16,14 +16,27 @@ cursor = conn.cursor()
 # 选择数据库
 conn.select_db("test")
 
+
+
 # name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
 # project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
 # name = '湖北省体育产业集团办公楼装修工程'
 # project_id = '110619cf-e20e-24f9-c880-627b63ad3702'
 
-name='武汉新洲万达文旅项目B地块户内及公区精装修工程标段三'
-project_id = '3209e90a-6705-cd2b-ce30-67c54bcea55d'
+# name='武汉新洲万达文旅项目B地块户内及公区精装修工程标段三'
+# project_id = '3209e90a-6705-cd2b-ce30-67c54bcea55d'
+num="QS2025-LY-SG006"
+
+sql="select b.id,b.name from Contracts a INNER JOIN Project b on a.id=b.contract_id where a.num='%s'"%(num)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+project_id = data[0]  # 计划金额
+name = data[1]  # 销项税
+
 
 # 工程收入--计划金额、销项税
 sql = "select income, output_tax from Project_Budgets  where project_id=(select id from project where name = '%s')" % (
@@ -34,7 +47,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 gcsr_jhje = float(data[0] or 0)  # 计划金额
-gcsr_xxs = float(data[1] or 0)  # 销项税
+gcsr_jhje_xxs = float(data[1] or 0)  # 销项税
+
 
 # 工程收入--合同金额、销项税
 sql = "select recent_amount from Contracts where  name='%s'" % (name)
@@ -53,6 +67,7 @@ if result == ():
 data = result[0]
 gcsr_htje_xxs = float(data[0] or 0)  # 合同金额
 
+
 # 工程收入--实收金额、销项税
 sql = "select sum(amount) as amount   from Collections  where project_id='%s' and ar_type='ARs'" % (project_id)
 cursor.execute(sql)
@@ -70,11 +85,14 @@ if result == ():
 data = result[0]
 gcsr_ssje_xxs = float(data[0] or 0)  # 销项税
 
-# 工程收入--代收金额、待缴销项税
-dsje = round(gcsr_htje - gcsr_ssje, 2)
-djxxs = round((gcsr_xxs - gcsr_ssje_xxs), 2)
 
-print(gcsr_jhje, gcsr_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, dsje, djxxs)
+# 工程收入--代收金额、待缴销项税
+gcsr_dsje = round(gcsr_htje - gcsr_ssje, 2)
+gcsr_jxxs = round((gcsr_jhje_xxs - gcsr_ssje_xxs), 2)
+
+
+print(gcsr_jhje, gcsr_jhje_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, gcsr_dsje, gcsr_jxxs)
+
 
 # 专项分包金额-计划金额、进项税
 sql = "select amount,vat from subcontract_budgets  where project_id='%s'" % (project_id)
@@ -83,8 +101,8 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-zxfbge_jhje = float(data[0] or 0)  # 专项分包金额-计划金额
-zxfbge_jhje_jjx = float(data[1] or 0)  # 专项分包金额-进项税
+zxfbje_jhje = float(data[0] or 0)  # 专项分包金额-计划金额
+zxfbje_jhje_jjx = float(data[1] or 0)  # 专项分包金额-进项税
 
 # 专项分包金额-合同金额、进项税
 sql = "select sum(recent_amount) as recent_amount from Subcontracts  where project_id='%s'" % (project_id)
@@ -94,6 +112,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 zxfbje_htje = float(data[0] or 0)  # 专项分包金额-合同金额
+
+
 # 专项分包金额-进项税
 sql = "select sum(tax) from Subcontracts where project_id='%s' " % (project_id)
 cursor.execute(sql)
@@ -102,6 +122,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 zxfbje_htje_jxs = float(data[0] or 0)
+
 
 # 专项分包金额-实付金额、进项税
 sql = "select sum(amount) from Payments where project_id='%s'" % (project_id)
@@ -123,14 +144,15 @@ data = result[0]
 zxfbje_sfje_jxs = float(data[0] or 0)
 
 
-sql="select sum(amount),sum(tax) from Purchase_Orders where  project_id='%s'"% (project_id)
-cursor.execute(sql)
-result = cursor.fetchall()
-if result == ():
-    result = (('0', '0'), ())
-data = result[0]
-cgje_sfje= float(data[0] or 0)
-cgje_sfje_jxs= float(data[1] or 0)
+# sql="select sum(amount),sum(tax) from Purchase_Orders where  project_id='%s'"% (project_id)
+# cursor.execute(sql)
+# result = cursor.fetchall()
+# if result == ():
+#     result = (('0', '0'), ())
+# data = result[0]
+# cgje_sfje= float(data[0] or 0)
+# cgje_sfje_jxs= float(data[1] or 0)
+
 
 
 # 专项分包金额-待付款金额、待抵扣进项税
@@ -140,11 +162,11 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-zxfbje_dfkje = float(data[0] or 0)
+zxfbje_dfje = float(data[0] or 0)
 
-ddkjxs = round((zxfbje_htje_jxs - zxfbje_sfje_jxs), 2)
+zxfbje_ddkjxs = round((zxfbje_htje_jxs - zxfbje_sfje_jxs), 2)
 
-print(zxfbge_jhje, zxfbge_jhje_jjx, zxfbje_htje, zxfbje_htje_jxs, zxfbje_sfje, zxfbje_sfje_jxs, zxfbje_dfkje, ddkjxs)
+print(zxfbje_jhje, zxfbje_jhje_jjx, zxfbje_htje, zxfbje_htje_jxs, zxfbje_sfje, zxfbje_sfje_jxs, zxfbje_dfje, zxfbje_ddkjxs)
 
 # 项目管理费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='Management' and a.project_id='%s'" % (
@@ -155,7 +177,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 xmglf_jhje = float(data[0] or 0)
-xmglf_jxs = float(data[1] or 0)
+xmglf_jhje_jxs = float(data[1] or 0)
+
 
 # 项目管理费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) vat from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects'  and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_management' and a.project_id='%s'" % (
@@ -168,7 +191,7 @@ data = result[0]
 xmglf_sfje = float(data[0] or 0)
 xmglf_sfje_jxs = float(data[1] or 0)
 
-print(xmglf_jhje, xmglf_jxs, "  ", "   ", xmglf_sfje, xmglf_sfje_jxs)
+print(xmglf_jhje, xmglf_jhje_jxs, "  ", "   ", xmglf_sfje, xmglf_sfje_jxs)
 
 # 业务费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='business' and a.project_id='%s'" % (
@@ -179,7 +202,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 ywf_jhje = float(data[0] or 0)
-ywf_jxs = float(data[1] or 0)
+ywf_jhje_jxs = float(data[1] or 0)
+
 
 # 业务费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_business' and a.project_id='%s'" % (
@@ -192,7 +216,7 @@ data = result[0]
 ywf_sfje = float(data[0] or 0)
 ywf_sfje_jxs = float(data[1] or 0)
 
-print(ywf_jhje, ywf_jxs, "  ", "   ", ywf_sfje, ywf_sfje_jxs)
+print(ywf_jhje, ywf_jhje_jxs, "  ", "   ", ywf_sfje, ywf_sfje_jxs)
 
 # 平台服务费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='PlatformService' and a.project_id='%s'" % (
@@ -203,7 +227,10 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 ptfwf_jhje = float(data[0] or 0)
-ptfwf_jxs = float(data[1] or 0)
+ptfwf_jhje_jxs = float(data[1] or 0)
+
+
+
 
 # 平台服务费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_PlatformService' and a.project_id='%s'" % (
@@ -216,7 +243,8 @@ data = result[0]
 ptfwf_sfje = float(data[0] or 0)
 ptfwf_sfje_jxs = float(data[1] or 0)
 
-print(ptfwf_jhje, ptfwf_jxs, "  ", "   ", ptfwf_sfje, ptfwf_sfje_jxs)
+
+print(ptfwf_jhje, ptfwf_jhje_jxs, "  ", "   ", ptfwf_sfje, ptfwf_sfje_jxs)
 
 # 综合税额（含附加税）-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='additionalTax' and a.project_id='%s'" % (
@@ -227,7 +255,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 zhse_jhje = float(data[0] or 0)
-zhse_jxs = float(data[1] or 0)
+zhse_jhje_jxs = float(data[1] or 0)
+
 
 # 综合税额（含附加税）-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_additionalTax' and a.project_id='%s'" % (
@@ -240,7 +269,9 @@ data = result[0]
 zhse_sfje = float(data[0] or 0)
 zhse_sfje_jxs = float(data[1] or 0)
 
-print(zhse_jhje, zhse_jxs, "  ", "   ", zhse_sfje, zhse_sfje_jxs)
+
+
+print(zhse_jhje, zhse_jhje_jxs, "  ", "   ", zhse_sfje, zhse_sfje_jxs)
 
 # 财务费用-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='financialexpenses' and a.project_id='%s'" % (
@@ -251,7 +282,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 cwfy_jhje = float(data[0] or 0)
-cwfy_jxs = float(data[1] or 0)
+cwfy_jhje_jxs = float(data[1] or 0)
 
 # 财务费用-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_financialexpenses' and a.project_id='%s'" % (
@@ -264,7 +295,8 @@ data = result[0]
 cwfy_sfje = float(data[0] or 0)
 cwfy_sfje_jxs = float(data[1] or 0)
 
-print(cwfy_jhje, cwfy_jxs, "  ", "   ", cwfy_sfje, cwfy_sfje_jxs)
+
+print(cwfy_jhje, cwfy_jhje_jxs, "  ", "   ", cwfy_sfje, cwfy_sfje_jxs)
 
 # 维保费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='maintenance' and a.project_id='%s'" % (
@@ -275,7 +307,10 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 wbf_jhje = float(data[0] or 0)
-wbf_jxs = float(data[1] or 0)
+wbf_jhje_jxs = float(data[1] or 0)
+
+
+
 
 # 维保费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_maintenance' and a.project_id='%s'" % (
@@ -288,7 +323,7 @@ data = result[0]
 wbf_sfje = float(data[0] or 0)
 wbf_sfje_jxs = float(data[1] or 0)
 
-print(wbf_jhje, wbf_jxs, "  ", "   ", wbf_sfje, wbf_sfje_jxs)
+print(wbf_jhje, wbf_jhje_jxs, "  ", "   ", wbf_sfje, wbf_sfje_jxs)
 
 # 其他支出-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='others' and a.project_id='%s'" % (
@@ -299,7 +334,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 qt_jhje = float(data[0] or 0)
-qt_jxs = float(data[1] or 0)
+qt_jhje_jxs = float(data[1] or 0)
 
 # 其他支出-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_others' and a.project_id='%s'" % (
@@ -312,7 +347,7 @@ data = result[0]
 qt_sfje = float(data[0] or 0)
 qt_sfje_jxs = float(data[1] or 0)
 
-print(qt_jhje, qt_jxs, "  ", "   ", qt_sfje, qt_sfje_jxs)
+print(qt_jhje, qt_jhje_jxs, "  ", "   ", qt_sfje, qt_sfje_jxs)
 
 # 措施费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='precaution' and a.project_id='%s'" % (
@@ -323,7 +358,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 csf_jhje = float(data[0] or 0)
-csf_jxs = float(data[1] or 0)
+csf_jhje_jxs = float(data[1] or 0)
 
 # 措施费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_precaution' and a.project_id='%s'" % (
@@ -336,7 +371,7 @@ data = result[0]
 csf_sfje = float(data[0] or 0)
 csf_sfje_jxs = float(data[1] or 0)
 
-print(csf_jhje, csf_jxs, "  ", "   ", csf_sfje, csf_sfje_jxs)
+print(csf_jhje, csf_jhje_jxs, "  ", "   ", csf_sfje, csf_sfje_jxs)
 
 # 利润分配-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='lirunfenpei' and a.project_id='%s'" % (
@@ -347,7 +382,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 lrfp_jhje = float(data[0] or 0)
-lrfp_jxs = float(data[1] or 0)
+lrfp_jhje_jxs = float(data[1] or 0)
 
 # 利润分配-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_lirunfenpei' and a.project_id='%s'" % (
@@ -360,7 +395,7 @@ data = result[0]
 lrfp_sfje = float(data[0] or 0)
 lrfp_sfje_jxs = float(data[1] or 0)
 
-print(lrfp_jhje, lrfp_jxs, "  ", "   ", lrfp_sfje, lrfp_sfje_jxs)
+print(lrfp_jhje, lrfp_jhje_jxs, "  ", "   ", lrfp_sfje, lrfp_sfje_jxs)
 
 # 居间费-计划金额、进项税
 sql = "select b.amount,ifnull(b.vat,0) from Project_Budgets a inner join project_budget_costs b on a.id=b.parent_id and b.name='jujianfei' and a.project_id='%s'" % (
@@ -371,7 +406,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 jjf_jhje = float(data[0] or 0)
-jjf_jxs = float(data[1] or 0)
+jjf_jhje_jxs = float(data[1] or 0)
 
 # 居间费-实付金额、进项税
 sql = "select sum(b.amount) amount,ifnull(sum(b.vat),0) from Expenses a inner join expense_items b on a.id=b.parent_id  where a.type='Projects' and a.approval_status='Approval'  and b.deleted=0 and b.type like 'projects_jujianfei' and a.project_id='%s'" % (
@@ -384,7 +419,7 @@ data = result[0]
 jjf_sfje = float(data[0] or 0)
 jjf_sfje_jxs = float(data[1] or 0)
 
-print(jjf_jhje, jjf_jxs, "  ", "   ", jjf_sfje, jjf_sfje_jxs)
+print(jjf_jhje, jjf_jhje_jxs, "  ", "   ", jjf_sfje, jjf_sfje_jxs)
 
 # 借款余额-实付金额
 sql = "select sum((amount-expense_amount-repayment_amount)) from Loans where project_id='%s'" % (project_id)
@@ -399,10 +434,10 @@ print(" ", "  ", "   ", jkye_sfje, "  ")
 
 # 小计
 jhje_xj = round(
-    zxfbge_jhje + xmglf_jhje + ywf_jhje + ptfwf_jhje + zhse_jhje + cwfy_jhje + wbf_jhje + qt_jhje + csf_jhje + lrfp_jhje + jjf_jhje,
+    zxfbje_jhje + xmglf_jhje + ywf_jhje + ptfwf_jhje + zhse_jhje + cwfy_jhje + wbf_jhje + qt_jhje + csf_jhje + lrfp_jhje + jjf_jhje,
     2)
 jhje_jxs_xj = round(
-    zxfbge_jhje_jjx + xmglf_jxs + ywf_jxs + ptfwf_jxs + zhse_jxs + cwfy_jxs + wbf_jxs + qt_jxs + csf_jxs + lrfp_jxs + jjf_jxs,
+    zxfbje_jhje_jjx + xmglf_jhje_jxs + ywf_jhje_jxs + ptfwf_jhje_jxs + zhse_jhje_jxs + cwfy_jhje_jxs + wbf_jhje_jxs + qt_jhje_jxs + csf_jhje_jxs + lrfp_jhje_jxs + jjf_jhje_jxs,
     2)
 
 htje_xj = zxfbje_htje
@@ -414,12 +449,114 @@ sfje_xj = round(
 sfje_jxs_xj = round(
     zxfbje_sfje_jxs + xmglf_sfje_jxs + ywf_sfje_jxs + ptfwf_sfje_jxs + zhse_sfje_jxs + cwfy_sfje_jxs + wbf_sfje_jxs + qt_sfje_jxs + csf_sfje_jxs + lrfp_sfje_jxs + jjf_sfje_jxs,
     2)
+dfje_xj=zxfbje_dfje
+djkjjs_xj = zxfbje_ddkjxs
 
-djkjjs_xj = ddkjxs
 
-print(jhje_xj, jhje_jxs_xj, htje_xj, htje_jxs_xj, sfje_xj, sfje_jxs_xj, djkjjs_xj)
+print({
+    "code": "200",
+    "msg": "数据获取成功",
+    "data":
+        {
+            "gcsr":{
+                {"gcsr_jhje":gcsr_jhje},
+                {"gcsr_jhje_xxs":gcsr_jhje_xxs},
+                {"gcsr_htje":gcsr_htje},
+                {"gcsr_htje_xxs":gcsr_htje_xxs},
+                {"gcsr_ssje":gcsr_ssje},
+                {"gcsr_ssje_xxs":gcsr_ssje_xxs},
+                {"gcsr_dsje":gcsr_dsje},
+                {"gcsr_jxxs":gcsr_jxxs}
+            },
+            "zxfbge":{
+                {"zxfbje_jhje":zxfbje_jhje},
+                {"zxfbje_jhje_jjx":zxfbje_jhje_jjx},
+                {"zxfbje_htje":zxfbje_htje},
+                {"zxfbje_htje_jxs":zxfbje_htje_jxs},
+                {"zxfbje_sfje":zxfbje_sfje},
+                {"zxfbje_sfje_jxs":zxfbje_sfje_jxs},
+                {"zxfbje_dfje":zxfbje_dfje},
+                {"zxfbje_ddkjxs":zxfbje_ddkjxs}
+            },
+            "xmglf":{
+                {"xmglf_jhje"}:{xmglf_jhje},
+                {"xmglf_jhje_jxs"}:{xmglf_jhje_jxs},
+                {"xmglf_sfje"}:{xmglf_sfje},
+                {"xmglf_sfje_jxs"}:{xmglf_sfje_jxs}
+            },
+            "ywf":{
+                {"ywf_jhje"}:{ywf_jhje},
+                {"ywf_jhje_jxs"}:{ywf_jhje_jxs},
+                {"ywf_sfje"}:{ywf_sfje},
+                {"ywf_sfje_jxs"}:{ywf_sfje_jxs},
+            },
+            "ptfwf":{
+                {"ptfwf_jhje"}:{ptfwf_jhje},
+                {"ptfwf_jhje_jxs"}:{ptfwf_jhje_jxs},
+                {"ptfwf_sfje"}:{ptfwf_sfje},
+                {"ptfwf_sfje_jxs"}:{ptfwf_sfje_jxs},
+            },
+            "zhse":{
+                {"zhse_jhje"}:{zhse_jhje},
+                {"zhse_jhje_jxs"}:{zhse_jhje_jxs},
+                {"zhse_sfje"}:{zhse_sfje},
+                {"zhse_sfje_jxs"}:{zhse_sfje_jxs}
+            },
+            "cwfy":{
+                {"cwfy_jhje"}:{cwfy_jhje},
+                {"cwfy_jhje_jxs"}:{cwfy_jhje_jxs},
+                {"cwfy_sfje"}:{cwfy_sfje},
+                {"cwfy_sfje_jxs"}:{cwfy_sfje_jxs},
+            },
+            "wbf":{
+                {"wbf_jhje"}:{wbf_jhje},
+                {"wbf_jhje_jxs"}:{wbf_jhje_jxs},
+                {"wbf_sfje"}:{wbf_sfje},
+                {"wbf_sfje_jxs"}:{wbf_sfje_jxs},
+            },
+            "qt":{
+                {"qt_jhje"}:{qt_jhje},
+                {"qt_jhje_jxs"}:{qt_jhje_jxs},
+                {"qt_sfje"}:{qt_sfje},
+                {"qt_sfje_jxs"}:{qt_sfje_jxs},
+            },
+            "csf":{
+                {"csf_jhje"}:{csf_jhje},
+                {"csf_jhje_jxs"}:{csf_jhje_jxs},
+                {"csf_sfje"}:{csf_sfje},
+                {"csf_sfje_jxs"}:{csf_sfje_jxs},
+            },
+            "lrfp":{
+                {"lrfp_jhje"}:{lrfp_jhje},
+                {"lrfp_jhje_jxs"}:{lrfp_jhje_jxs},
+                {"lrfp_sfje"}:{lrfp_sfje},
+                {"lrfp_sfje_jxs"}:{lrfp_sfje_jxs},
+            },
+            "jjf":{
+                {"jjf_jhje"}:{jjf_jhje},
+                {"jjf_jhje_jxs"}:{jjf_jhje_jxs},
+                {"jjf_sfje"}:{jjf_sfje},
+                {"jjf_sfje_jxs"}:{jjf_sfje_jxs},
+            },
+            "jkye":{
+                {"jkye_sfje"}:{jkye_sfje}
+            },
+            "xj":{
+                {"jhje_xj"}:{jhje_xj},
+                {"jhje_jxs_xj"}:{jhje_jxs_xj},
+                {"htje_xj"}:{htje_xj},
+                {"htje_jxs_xj"}: {htje_jxs_xj},
+                {"sfje_xj"}:{sfje_xj},
+                {"sfje_jxs_xj"}:{sfje_jxs_xj},
+                {"dfje_xj"}:{dfje_xj},
+                {"djkjjs_xj"}:{djkjjs_xj}
+            },
+        }
+})
 
-print("===========================")
+
+print(jhje_xj, jhje_jxs_xj, htje_xj, htje_jxs_xj, sfje_xj, sfje_jxs_xj,dfje_xj ,djkjjs_xj)
+
 # 1.专项分包计划数量
 sql = "select ifnull(num,0) from Contracts  where name='%s'" % (name)
 cursor.execute(sql)
@@ -535,7 +672,7 @@ jhxjcs_sjxjcs=f"{jhxjcs}:{sjxjcs}"
 
 print(Contracts_number, xmhkl,xxjd,jhje_sjje_bfb,jhse_sjse_bfb,xmdjs,jhxjcs_sjxjcs)
 
-print("=============================")
+
 
 #项目收入--项目收入、其他收入
 xmsr_xmsr=zxfbje_sfje  #项目收入
@@ -724,7 +861,60 @@ kbxb_lw_ht=f"{(kbxb_lw_ht_sl/kbxb_htzs)*100:.2f}%"
 
 
 
+#应收甲方质保金
+sql="select ifnull(sum(invoice_balance),0) from ARs where project_id='%s' and zhibaojin=1"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_ysjfzbj=float(data[0]) #应收甲方质保金
+
+#材料合同（13%）比例
+sql="select count(b.tax_rate) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =13.00 GROUP BY b.tax_rate ORDER BY tax_rate"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_cl_ht_sl=float(data[0]) #%13材料合同数量
+
+kbxb_cl_ht=f"{(kbxb_cl_ht_sl/kbxb_htzs)*100:.2f}%"
+
+#实际注册占计划比值：
+kbxb_sjzczjbbz=f"{(sfje_xj/jhje_xj)*100:.2f}%"
+
+#累计开票金额
+sql="select sum(amount) from Purchase_Invoices where approval_status='Approval' and project_id='%s'"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('0', '0'), ())
+data = result[0]
+kbxb_jlkpje=float(data[0])
+
+#质保金到期日
+sql="select b.date_plan from Contracts a inner join contract_collection_plans b on a.id=b.parent_id and a.name='%s' and b.phase='zhibaojin'"%(name)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('-', '0'), ())
+data = result[0]
+kbxb_zbjdqr=data[0]
+
+#已收款比例
+kbxb_yskbl = f"{(gcsr_ssje / gcsr_htje * 100):.2f}%" if gcsr_htje != 0 else "0.00%"
+
+#应付质保金、未付质保金
+sql="select ifnull(sum(amount),0),ifnull(sum(payment_balance),0) from APs where project_id='%s' and approval_status='Approval' and zhibaojin=1"%(project_id)
+cursor.execute(sql)
+result = cursor.fetchall()
+if result == ():
+    result = (('-', '0'), ())
+data = result[0]
+kbxb_yfzbj=data[0]#应付质保金
+kbxb_wfzbj=data[0]#未付质保金
 
 
 
-print(kbxb_xmzt,kbxb_fbhtyfbl,kbxb_jkye,kbxb_jsfs,kbxb_lw_ht)
+print(kbxb_xmzt,kbxb_fbhtyfbl,kbxb_jkye,kbxb_jsfs,kbxb_lw_ht,kbxb_ysjfzbj,kbxb_cl_ht,kbxb_sjzczjbbz,kbxb_jlkpje,kbxb_zbjdqr,kbxb_yskbl,kbxb_yfzbj,kbxb_wfzbj)
