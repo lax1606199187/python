@@ -91,9 +91,9 @@ def read_root(num:str):
 
     # 工程收入--代收金额、待缴销项税
     gcsr_dsje = round(gcsr_htje - gcsr_ssje, 2)
-    gcsr_jxxs = round((gcsr_jhje_xxs - gcsr_ssje_xxs), 2)
+    gcsr_dsje_djxxs = round((gcsr_jhje_xxs - gcsr_ssje_xxs), 2)
 
-    print(gcsr_jhje, gcsr_jhje_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, gcsr_dsje, gcsr_jxxs)
+    print(gcsr_jhje, gcsr_jhje_xxs, gcsr_htje, gcsr_htje_xxs, gcsr_ssje, gcsr_ssje_xxs, gcsr_dsje, gcsr_dsje_djxxs)
 
     # 专项分包金额-计划金额、进项税
     sql = "select amount,vat from subcontract_budgets  where project_id='%s'" % (project_id)
@@ -805,9 +805,9 @@ def read_root(num:str):
                         {"gcsr_ssje": {gcsr_ssje}},
                         {"gcsr_ssje_xxs": {gcsr_ssje_xxs}},
                         {"gcsr_dsje": {gcsr_dsje}},
-                        {"gcsr_jxxs": {gcsr_jxxs}}
+                        {"gcsr_dsje_djxxs": {gcsr_dsje_djxxs}}
                     ],
-                    "zxfbge": [
+                    "zxfbje": [
                         {"zxfbje_jhje": {zxfbje_jhje}},
                         {"zxfbje_jhje_jjx": {zxfbje_jhje_jjx}},
                         {"zxfbje_htje": {zxfbje_htje}},
