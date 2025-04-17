@@ -453,108 +453,6 @@ dfje_xj=zxfbje_dfje
 djkjjs_xj = zxfbje_ddkjxs
 
 
-print({
-    "code": "200",
-    "msg": "数据获取成功",
-    "data":
-        {
-            "gcsr":{
-                {"gcsr_jhje":gcsr_jhje},
-                {"gcsr_jhje_xxs":gcsr_jhje_xxs},
-                {"gcsr_htje":gcsr_htje},
-                {"gcsr_htje_xxs":gcsr_htje_xxs},
-                {"gcsr_ssje":gcsr_ssje},
-                {"gcsr_ssje_xxs":gcsr_ssje_xxs},
-                {"gcsr_dsje":gcsr_dsje},
-                {"gcsr_jxxs":gcsr_jxxs}
-            },
-            "zxfbge":{
-                {"zxfbje_jhje":zxfbje_jhje},
-                {"zxfbje_jhje_jjx":zxfbje_jhje_jjx},
-                {"zxfbje_htje":zxfbje_htje},
-                {"zxfbje_htje_jxs":zxfbje_htje_jxs},
-                {"zxfbje_sfje":zxfbje_sfje},
-                {"zxfbje_sfje_jxs":zxfbje_sfje_jxs},
-                {"zxfbje_dfje":zxfbje_dfje},
-                {"zxfbje_ddkjxs":zxfbje_ddkjxs}
-            },
-            "xmglf":{
-                {"xmglf_jhje"}:{xmglf_jhje},
-                {"xmglf_jhje_jxs"}:{xmglf_jhje_jxs},
-                {"xmglf_sfje"}:{xmglf_sfje},
-                {"xmglf_sfje_jxs"}:{xmglf_sfje_jxs}
-            },
-            "ywf":{
-                {"ywf_jhje"}:{ywf_jhje},
-                {"ywf_jhje_jxs"}:{ywf_jhje_jxs},
-                {"ywf_sfje"}:{ywf_sfje},
-                {"ywf_sfje_jxs"}:{ywf_sfje_jxs},
-            },
-            "ptfwf":{
-                {"ptfwf_jhje"}:{ptfwf_jhje},
-                {"ptfwf_jhje_jxs"}:{ptfwf_jhje_jxs},
-                {"ptfwf_sfje"}:{ptfwf_sfje},
-                {"ptfwf_sfje_jxs"}:{ptfwf_sfje_jxs},
-            },
-            "zhse":{
-                {"zhse_jhje"}:{zhse_jhje},
-                {"zhse_jhje_jxs"}:{zhse_jhje_jxs},
-                {"zhse_sfje"}:{zhse_sfje},
-                {"zhse_sfje_jxs"}:{zhse_sfje_jxs}
-            },
-            "cwfy":{
-                {"cwfy_jhje"}:{cwfy_jhje},
-                {"cwfy_jhje_jxs"}:{cwfy_jhje_jxs},
-                {"cwfy_sfje"}:{cwfy_sfje},
-                {"cwfy_sfje_jxs"}:{cwfy_sfje_jxs},
-            },
-            "wbf":{
-                {"wbf_jhje"}:{wbf_jhje},
-                {"wbf_jhje_jxs"}:{wbf_jhje_jxs},
-                {"wbf_sfje"}:{wbf_sfje},
-                {"wbf_sfje_jxs"}:{wbf_sfje_jxs},
-            },
-            "qt":{
-                {"qt_jhje"}:{qt_jhje},
-                {"qt_jhje_jxs"}:{qt_jhje_jxs},
-                {"qt_sfje"}:{qt_sfje},
-                {"qt_sfje_jxs"}:{qt_sfje_jxs},
-            },
-            "csf":{
-                {"csf_jhje"}:{csf_jhje},
-                {"csf_jhje_jxs"}:{csf_jhje_jxs},
-                {"csf_sfje"}:{csf_sfje},
-                {"csf_sfje_jxs"}:{csf_sfje_jxs},
-            },
-            "lrfp":{
-                {"lrfp_jhje"}:{lrfp_jhje},
-                {"lrfp_jhje_jxs"}:{lrfp_jhje_jxs},
-                {"lrfp_sfje"}:{lrfp_sfje},
-                {"lrfp_sfje_jxs"}:{lrfp_sfje_jxs},
-            },
-            "jjf":{
-                {"jjf_jhje"}:{jjf_jhje},
-                {"jjf_jhje_jxs"}:{jjf_jhje_jxs},
-                {"jjf_sfje"}:{jjf_sfje},
-                {"jjf_sfje_jxs"}:{jjf_sfje_jxs},
-            },
-            "jkye":{
-                {"jkye_sfje"}:{jkye_sfje}
-            },
-            "xj":{
-                {"jhje_xj"}:{jhje_xj},
-                {"jhje_jxs_xj"}:{jhje_jxs_xj},
-                {"htje_xj"}:{htje_xj},
-                {"htje_jxs_xj"}: {htje_jxs_xj},
-                {"sfje_xj"}:{sfje_xj},
-                {"sfje_jxs_xj"}:{sfje_jxs_xj},
-                {"dfje_xj"}:{dfje_xj},
-                {"djkjjs_xj"}:{djkjjs_xj}
-            },
-        }
-})
-
-
 print(jhje_xj, jhje_jxs_xj, htje_xj, htje_jxs_xj, sfje_xj, sfje_jxs_xj,dfje_xj ,djkjjs_xj)
 
 # 1.专项分包计划数量
@@ -573,7 +471,10 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-Contracts_number = int(data[0] or 0)
+kb_sb_zxfbjhsl = int(data[0] or 0)
+
+
+
 
 # 2.项目回款率
 sql = "select income from Project_Budgets where Project_id='%s'" % (project_id)
@@ -593,7 +494,7 @@ data = result[0]
 ysje = int(data[0] or 0)
 a = ysje / sr
 xmhk = int(a * 10000) / 100
-xmhkl = f"{xmhk}%"  # 结果为 "96.49%"
+kb_sb_xmhkl = f"{xmhk}%"  # 结果为 "96.49%"
 
 
 
@@ -605,7 +506,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 a = data[0]  # 计划金额
-xxjd = f"{a}%"
+kb_sb_xxjd = f"{a}%"
 
 #4.计划金额与实际金额百分百
 sql = "select income, output_tax from Project_Budgets  where project_id=(select id from project where name = '%s')" % (
@@ -624,7 +525,7 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 kb_ssje = float(data[0] or 0)  # 实收金额
-jhje_sjje_bfb=f"{(kb_ssje/kb_jhje)*100:.2f}%"
+kb_sb_jhjeysjjebfb=f"{(kb_ssje/kb_jhje)*100:.2f}%"
 
 
 #5.所有计划的计划税额与所有实际税额的百分比
@@ -636,7 +537,7 @@ if result == ():
 data = result[0]
 kb_5_jhse = float(data[0] or 0)
 
-jhse_sjse_bfb=f"{(sfje_jxs_xj/kb_5_jhse)*100:.2f}%"
+kb_sb_jhseysjsebfb=f"{(sfje_jxs_xj/kb_5_jhse)*100:.2f}%"
 
 
 #6.项目倒计时
@@ -646,9 +547,9 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmdjs = data[0]
-if xmdjs==None:
-    xmdjs="用户未填写完工日期"
+kb_sb_xmdjs = data[0]
+if kb_sb_xmdjs==None:
+    kb_sb_xmdjs="用户未填写完工日期"
 
 #7.计划巡检次数与实际巡检次数对比
 sql="select count(*) from project_check_plans a INNER JOIN project_check_plan_items b on a.id=b.parent_id where a.project_id='%s'"% (project_id)
@@ -667,15 +568,15 @@ if result == ():
 data = result[0]
 sjxjcs = data[0]
 
-jhxjcs_sjxjcs=f"{jhxjcs}:{sjxjcs}"
+kb_sb_jhxjcsysjxjcsdb=f"{jhxjcs}:{sjxjcs}"
 
 
-print(Contracts_number, xmhkl,xxjd,jhje_sjje_bfb,jhse_sjse_bfb,xmdjs,jhxjcs_sjxjcs)
+print(kb_sb_zxfbjhsl, kb_sb_xmhkl,kb_sb_xxjd,kb_sb_jhjeysjjebfb,kb_sb_jhseysjsebfb,kb_sb_xmdjs,kb_sb_jhxjcsysjxjcsdb)
 
 
 
-#项目收入--项目收入、其他收入
-xmsr_xmsr=zxfbje_sfje  #项目收入
+#资金预览--项目收入--项目收入、其他收入
+zjyl_xmsr_xmsr=zxfbje_sfje  #项目收入
 
 
 sql="select ifnull(sum(amount),0) from Other_ARs where project_id='%s'"%(project_id)
@@ -684,11 +585,11 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmsr_qtsr = float(data[0])
+zjyl_xmsr_qtsr = float(data[0])
 
 
-#项目支出--分包合同已付金额、分包合同未付金额、费用报销金额、开票税费、借款单余额
-xmzc_fbhtyfje=zxfbje_sfje #分包合同已付金额
+#资金预览--项目支出--分包合同已付金额、分包合同未付金额、费用报销金额、开票税费、借款单余额
+zjyl_xmzc_fbhtyfje=zxfbje_sfje #分包合同已付金额
 
 sql="select sum(recent_amount) from Subcontracts where project_id='%s'"%(project_id)
 cursor.execute(sql)
@@ -697,8 +598,8 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 zxhj = float(data[0])
-xmzc_fbhtwfje_str=f"{(zxhj-xmzc_fbhtyfje):.2f}" #分包合同未付金额
-xmzc_fbhtwfje=float(xmzc_fbhtwfje_str)
+xmzc_fbhtwfje_str=f"{(zxhj-zjyl_xmzc_fbhtyfje):.2f}" #分包合同未付金额
+zjyl_xmzc_fbhtwfje=float(xmzc_fbhtwfje_str)
 
 sql="select ifnull(sum(expense_amount),0) from Expenses where project_id='%s' and approval_status='Approval'"%(project_id)
 cursor.execute(sql)
@@ -706,7 +607,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmzc_fybxje = float(data[0])#费用报销金额
+zjyl_xmzc_fybxje = float(data[0])#费用报销金额
 
 sql="select sum(zksf) from ARs where project_id='%s' and approval_status='Approval'"%(project_id)
 cursor.execute(sql)
@@ -714,7 +615,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmzc_kpsf = float(data[0])#开票税费
+zjyl_xmzc_kpsf = float(data[0])#开票税费
 
 sql="select ifnull(sum(balance),2) from Loans where  project_id='%s' and approval_status='Approval' "%(project_id)
 cursor.execute(sql)
@@ -722,9 +623,9 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmzc_jkdye = float(data[0])#借款单余额
+zjyl_xmzc_jkdye = float(data[0])#借款单余额
 
-#项目暂扣费--风险押金、履约保证金、资料押金、其他押金、居间费
+#资金预览--项目暂扣费--风险押金、履约保证金、资料押金、其他押金、居间费
 sql="select risk,deposit,other_deposit,pay_management_fee from project where name='%s'"%(name)
 cursor.execute(sql)
 result = cursor.fetchall()
@@ -732,18 +633,18 @@ if result == ():
     result = (('0', '0'), ())
 data = result[0]
 fxyj_bfb = data[0]
-xmzkf_fxyj_str = f"{(xmsr_xmsr * (fxyj_bfb / 100)):.2f}"#风险押金
-xmzkf_fxyj=float(xmzkf_fxyj_str)
-fxyj_zlyj = data[1] # 资料押金
-fxyj_qtyj = data[2]# 其他押金
-fxyj_qtyj = data[3]# 项目管理费
+xmzkf_fxyj_str = f"{(zjyl_xmsr_xmsr * (fxyj_bfb / 100)):.2f}"
+zjyl_xmzkf_fxyj=float(xmzkf_fxyj_str)#风险押金
+a = data[1] # 资料押金
+b = data[2]# 其他押金
+zjyl_xmzkf_xmglf = data[3]# 项目管理费
 
-xmzkf_lybzj=0 #履约保证金
+zjyl_xmzkf_lybzj=0 #履约保证金
 
-xmzkf_zlyj_str=f"{(xmsr_xmsr * (fxyj_zlyj / 100)):.2f}"#资料押金
-xmzkf_zlyj=float(xmzkf_zlyj_str)
-xmzkf_qtyj_str=f"{(xmsr_xmsr * (fxyj_qtyj / 100)):.2f}"#其他押金
-xmzkf_qtyj=float(xmzkf_qtyj_str)
+xmzkf_zlyj_str=f"{(zjyl_xmsr_xmsr * (a / 100)):.2f}"
+zjyl_xmzkf_zlyj=float(xmzkf_zlyj_str)#资料押金
+xmzkf_qtyj_str=f"{(zjyl_xmsr_xmsr * (b / 100)):.2f}"
+zjyl_xmzkf_qtyj=float(xmzkf_qtyj_str)#其他押金
 
 
 
@@ -757,35 +658,35 @@ fxyj_jjf_bfb = data[0]
 xmzkf_xmsr=zxfbje_sfje
 xmzkf_fxyj_ze = f"{(xmzkf_xmsr * (fxyj_jjf_bfb / 100)):.2f}"
 
-xmzkf_jjf=float(xmzkf_fxyj_ze)-float(jjf_sfje)#居间费
+zjyl_xmzkf_jjf=float(xmzkf_fxyj_ze)-float(jjf_sfje)#居间费
 
-#项目垫资款-垫资款余额
+#资金预览--项目垫资款-垫资款余额
 sql="select sum(balance) from entrusted_collections where parent_id='%s'"%(project_id)
 cursor.execute(sql)
 result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-xmdzk_dzkye = float(data[0])#垫资款余额
+zjyl_xmdzk_dzkye = float(data[0])#垫资款余额
 
 
-#进项税-已登记进项税
-jxs_ydjjxs=sfje_jxs_xj
+#资金预览--进项税-已登记进项税
+zjyl_jxs_ydjjxs=sfje_jxs_xj
 
 
-#管理费-已收管理费
-glf_xmsr_bfb=fxyj_qtyj
+#资金预览--管理费-已收管理费
+glf_xmsr_bfb=zjyl_xmzkf_xmglf
 glf_xmsr=zxfbje_sfje
 glf_ysglf_str = f"{(glf_xmsr * (glf_xmsr_bfb / 100)):.2f}"#风险押金
-glf_ysglf=float(glf_ysglf_str)
+zjyl_glf_ysglf=float(glf_ysglf_str)
 
 
-#项目可用额度
-xmkyed=f"{(xmsr_xmsr+xmsr_qtsr+(xmzc_fbhtyfje+xmzc_fbhtwfje+xmzc_fybxje+xmzc_kpsf+xmzc_jkdye)-(xmzkf_fxyj+xmzkf_lybzj+xmzkf_zlyj+xmzkf_qtyj+xmzkf_jjf)+xmdzk_dzkye+jxs_ydjjxs-glf_ysglf):.2f}"
+#资金预览--项目可用额度
+zjyl_xmkyed=f"{(zjyl_xmsr_xmsr+zjyl_xmsr_qtsr+(zjyl_xmzc_fbhtyfje+zjyl_xmzc_fbhtwfje+zjyl_xmzc_fybxje+zjyl_xmzc_kpsf+zjyl_xmzc_jkdye)-(zjyl_xmzkf_fxyj+zjyl_xmzkf_lybzj+zjyl_xmzkf_zlyj+zjyl_xmzkf_qtyj+zjyl_xmzkf_jjf)+zjyl_xmdzk_dzkye+zjyl_jxs_ydjjxs-zjyl_glf_ysglf):.2f}"
 
 
 
-print(xmsr_xmsr,xmsr_qtsr,xmzc_fbhtyfje,xmzc_fbhtwfje,xmzc_fybxje,xmzc_kpsf,xmzc_jkdye,xmzkf_fxyj,xmzkf_lybzj,xmzkf_zlyj,xmzkf_qtyj,xmzkf_jjf,xmdzk_dzkye,jxs_ydjjxs,glf_ysglf,xmkyed)
+print(zjyl_xmsr_xmsr,zjyl_xmsr_qtsr,zjyl_xmzc_fbhtyfje,zjyl_xmzc_fbhtwfje,zjyl_xmzc_fybxje,zjyl_xmzc_kpsf,zjyl_xmzc_jkdye,zjyl_xmzkf_fxyj,zjyl_xmzkf_lybzj,zjyl_xmzkf_zlyj,zjyl_xmzkf_qtyj,zjyl_xmzkf_jjf,zjyl_xmdzk_dzkye,zjyl_jxs_ydjjxs,zjyl_glf_ysglf,zjyl_xmkyed)
 
 #看板下部_项目状态
 sql="select stage from project where name='%s'"%(name)
@@ -794,28 +695,27 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_xmzt_status =data[0]#项目状态
-kbxb_xmzt=""
-if kbxb_xmzt_status =="started":
-    kbxb_xmzt="已开始"
-if kbxb_xmzt_status =="not_started":
-    kbxb_xmzt = "未开始"
-if kbxb_xmzt_status =="seal":
-    kbxb_xmz = "已封账"
-if kbxb_xmzt_status =="ended":
-    kbxb_xmzt= "已竣工"
-if kbxb_xmzt_status =="settled":
-    kbxb_xmzt= "已结算"
-if kbxb_xmzt_status =="checked":
-    kbxb_xmzt= "已完工"
+zjxq_xmzt_status =data[0]
+zjxq_xmzt=""#项目状态
+if zjxq_xmzt_status =="started":
+    zjxq_xmzt="已开始"
+if zjxq_xmzt_status =="not_started":
+    zjxq_xmzt = "未开始"
+if zjxq_xmzt_status =="seal":
+    zjxq_xmz = "已封账"
+if zjxq_xmzt_status =="ended":
+    zjxq_xmzt= "已竣工"
+if zjxq_xmzt_status =="settled":
+    zjxq_xmzt= "已结算"
+if zjxq_xmzt_status =="checked":
+    zjxq_xmzt= "已完工"
 
 
 #分包合同已付比例
-kbxb_htje=zxfbje_htje
-kbxb_yfje=zxfbje_sfje
+zjxq_htje=zxfbje_htje
+zjxq_yfje=zxfbje_sfje
 
-
-kbxb_fbhtyfbl=f"{(kbxb_yfje/kbxb_htje)*100:.2f}%"
+zjxq_fbhtyfbl=f"{(zjxq_yfje/zjxq_htje)*100:.2f}%"#分包合同已付比例
 
 #借款余额
 sql="select ifnull(sum(balance),0) from Loans where project_id='%s'"%(project_id)
@@ -824,7 +724,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_jkye = float(data[0])#借款余额
+zjxq_jkye = float(data[0])#借款余额
 
 #计税方式
 sql="select tax_calculation_method from project where name='%s'"%(name)
@@ -833,12 +733,12 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_jsfs_code = float(data[0])
-kbxb_jsfs=""#计税方式
-if kbxb_jsfs_code ==1:
-    kbxb_jsfs='简易计税'
-if kbxb_jsfs_code ==2:
-    kbxb_jsfs='一般计税'
+zjxq_jsfs_code = float(data[0])
+zjxq_jsfs=""#计税方式
+if zjxq_jsfs_code ==1:
+    zjxq_jsfs='简易计税'
+if zjxq_jsfs_code ==2:
+    zjxq_jsfs='一般计税'
 
 # #劳务合同比例
 sql="select count(*) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s'"%(project_id)
@@ -847,7 +747,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_htzs=float(data[0]) #合同总数
+zjxq_htzs=float(data[0]) #合同总数
 
 sql="select count(b.tax_rate) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =3.00 GROUP BY b.tax_rate ORDER BY tax_rate"%(project_id)
 cursor.execute(sql)
@@ -855,9 +755,9 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_lw_ht_sl=float(data[0]) #%3劳务合同数量
+zjxq_lw_ht_sl=float(data[0]) #%3劳务合同数量
 
-kbxb_lw_ht=f"{(kbxb_lw_ht_sl/kbxb_htzs)*100:.2f}%"
+zjxq_lwhtbl=f"{(zjxq_lw_ht_sl/zjxq_htzs)*100:.2f}%"
 
 
 
@@ -868,7 +768,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_ysjfzbj=float(data[0]) #应收甲方质保金
+zjxq_ysjfzbj=float(data[0]) #应收甲方质保金
 
 #材料合同（13%）比例
 sql="select count(b.tax_rate) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =13.00 GROUP BY b.tax_rate ORDER BY tax_rate"%(project_id)
@@ -877,12 +777,12 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_cl_ht_sl=float(data[0]) #%13材料合同数量
+zjxq_cl_ht_sl=float(data[0]) #%13材料合同数量
 
-kbxb_cl_ht=f"{(kbxb_cl_ht_sl/kbxb_htzs)*100:.2f}%"
+zjxq_clhtbl=f"{(zjxq_cl_ht_sl/zjxq_htzs)*100:.2f}%"
 
 #实际注册占计划比值：
-kbxb_sjzczjbbz=f"{(sfje_xj/jhje_xj)*100:.2f}%"
+zjxq_sjzczjbbz=f"{(sfje_xj/jhje_xj)*100:.2f}%"#实际注册占计划比值：
 
 #累计开票金额
 sql="select sum(amount) from Purchase_Invoices where approval_status='Approval' and project_id='%s'"%(project_id)
@@ -891,7 +791,7 @@ result = cursor.fetchall()
 if result == ():
     result = (('0', '0'), ())
 data = result[0]
-kbxb_jlkpje=float(data[0])
+zjxq_jlkpje=float(data[0])#累计开票金额
 
 #质保金到期日
 sql="select b.date_plan from Contracts a inner join contract_collection_plans b on a.id=b.parent_id and a.name='%s' and b.phase='zhibaojin'"%(name)
@@ -900,10 +800,10 @@ result = cursor.fetchall()
 if result == ():
     result = (('-', '0'), ())
 data = result[0]
-kbxb_zbjdqr=data[0]
+zjxq_zbjdqr=data[0]#质保金到期日
 
 #已收款比例
-kbxb_yskbl = f"{(gcsr_ssje / gcsr_htje * 100):.2f}%" if gcsr_htje != 0 else "0.00%"
+zjxq_yskbl = f"{(gcsr_ssje / gcsr_htje * 100):.2f}%" if gcsr_htje != 0 else "0.00%"#已收款比例
 
 #应付质保金、未付质保金
 sql="select ifnull(sum(amount),0),ifnull(sum(payment_balance),0) from APs where project_id='%s' and approval_status='Approval' and zhibaojin=1"%(project_id)
@@ -912,9 +812,11 @@ result = cursor.fetchall()
 if result == ():
     result = (('-', '0'), ())
 data = result[0]
-kbxb_yfzbj=data[0]#应付质保金
-kbxb_wfzbj=data[0]#未付质保金
+zjxq_yfzbj=data[0]#应付质保金
+zjxq_wfzbj=data[0]#未付质保金
 
 
 
-print(kbxb_xmzt,kbxb_fbhtyfbl,kbxb_jkye,kbxb_jsfs,kbxb_lw_ht,kbxb_ysjfzbj,kbxb_cl_ht,kbxb_sjzczjbbz,kbxb_jlkpje,kbxb_zbjdqr,kbxb_yskbl,kbxb_yfzbj,kbxb_wfzbj)
+print(zjxq_xmzt,zjxq_fbhtyfbl,zjxq_jkye,zjxq_jsfs,zjxq_lwhtbl,zjxq_ysjfzbj,zjxq_clhtbl,zjxq_sjzczjbbz,zjxq_jlkpje,zjxq_zbjdqr,zjxq_yskbl,zjxq_yfzbj,zjxq_wfzbj)
+
+
