@@ -890,48 +890,49 @@ def read_root(num:str):
                         {"dfje_xj": dfje_xj},
                         {"djkjjs_xj": djkjjs_xj}
                     ],
-                    "kb_sb": [
-                        {"kb_sb_zxfbjhsl": kb_sb_zxfbjhsl},
-                        {"kb_sb_xmhkl": kb_sb_xmhkl},
-                        {"kb_sb_xxjd": kb_sb_xxjd},
-                        {"kb_sb_jhjeysjjebfb": kb_sb_jhjeysjjebfb},
-                        {"kb_sb_jhseysjsebfb": kb_sb_jhseysjsebfb},
-                        {"kb_sb_xmdjs": kb_sb_xmdjs},
-                        {"kb_sb_jhxjcsysjxjcsdb": kb_sb_jhxjcsysjxjcsdb},
-                    ],
-                    "zjyl": [
-                        {"zjyl_xmsr_xmsr": zjyl_xmsr_xmsr},
-                        {"zjyl_xmsr_qtsr": zjyl_xmsr_qtsr},
-                        {"zjyl_xmzc_fbhtyfje": zjyl_xmzc_fbhtyfje},
-                        {"zjyl_xmzc_fbhtwfje": zjyl_xmzc_fbhtwfje},
-                        {"zjyl_xmzc_fybxje": zjyl_xmzc_fybxje},
-                        {"zjyl_xmzc_kpsf": zjyl_xmzc_kpsf},
-                        {"zjyl_xmzc_jkdye": zjyl_xmzc_jkdye},
-                        {"zjyl_xmzkf_fxyj": zjyl_xmzkf_fxyj},
-                        {"zjyl_xmzkf_lybzj": zjyl_xmzkf_lybzj},
-                        {"zjyl_xmzkf_zlyj": zjyl_xmzkf_zlyj},
-                        {"zjyl_xmzkf_qtyj": zjyl_xmzkf_qtyj},
-                        {"zjyl_xmzkf_jjf": zjyl_xmzkf_jjf},
-                        {"zjyl_xmdzk_dzkye": zjyl_xmdzk_dzkye},
-                        {"zjyl_jxs_ydjjxs": zjyl_jxs_ydjjxs},
-                        {"zjyl_glf_ysglf": zjyl_glf_ysglf},
-                        {"zjyl_xmkyed": zjyl_xmkyed}
-                    ],
-                    "zjxq": [
-                        {"zjxq_xmzt": zjxq_xmzt},
-                        {"zjxq_fbhtyfbl": zjxq_fbhtyfbl},
-                        {"zjxq_jkye": zjxq_jkye},
-                        {"zjxq_jsfs": zjxq_jsfs},
-                        {"zjxq_lwhtbl": zjxq_lwhtbl},
-                        {"zjxq_ysjfzbj": zjxq_ysjfzbj},
-                        {"zjxq_clhtbl": zjxq_clhtbl},
-                        {"zjxq_sjzczjbbz": zjxq_sjzczjbbz},
-                        {"zjxq_jlkpje": zjxq_jlkpje},
-                        {"zjxq_zbjdqr": zjxq_zbjdqr},
-                        {"zjxq_yskbl": zjxq_yskbl},
-                        {"zjxq_yfzbj": zjxq_yfzbj},
-                        {"zjxq_wfzbj": zjxq_wfzbj}
-                    ]
+
+                        "kb_sb_zxfbjhsl": kb_sb_zxfbjhsl,
+                        "kb_sb_xmhkl": kb_sb_xmhkl,
+                        "kb_sb_xxjd": kb_sb_xxjd,
+                        "kb_sb_jhjeysjjebfb": kb_sb_jhjeysjjebfb,
+                        "kb_sb_jhseysjsebfb": kb_sb_jhseysjsebfb,
+                        "kb_sb_xmdjs": kb_sb_xmdjs,
+                        "kb_sb_jhxjcsysjxjcsdb": kb_sb_jhxjcsysjxjcsdb,
+
+
+                        "zjyl_xmsr_xmsr": zjyl_xmsr_xmsr,
+                        "zjyl_xmsr_qtsr": zjyl_xmsr_qtsr,
+                        "zjyl_xmzc_fbhtyfje": zjyl_xmzc_fbhtyfje,
+                        "zjyl_xmzc_fbhtwfje": zjyl_xmzc_fbhtwfje,
+                        "zjyl_xmzc_fybxje": zjyl_xmzc_fybxje,
+                        "zjyl_xmzc_kpsf": zjyl_xmzc_kpsf,
+                        "zjyl_xmzc_jkdye": zjyl_xmzc_jkdye,
+                        "zjyl_xmzkf_fxyj": zjyl_xmzkf_fxyj,
+                        "zjyl_xmzkf_lybzj": zjyl_xmzkf_lybzj,
+                        "zjyl_xmzkf_zlyj": zjyl_xmzkf_zlyj,
+                        "zjyl_xmzkf_qtyj": zjyl_xmzkf_qtyj,
+                        "zjyl_xmzkf_jjf": zjyl_xmzkf_jjf,
+                        "zjyl_xmdzk_dzkye": zjyl_xmdzk_dzkye,
+                        "zjyl_jxs_ydjjxs": zjyl_jxs_ydjjxs,
+                        "zjyl_glf_ysglf": zjyl_glf_ysglf,
+                        "zjyl_xmkyed": zjyl_xmkyed,
+
+
+                        "zjxq_xmzt": zjxq_xmzt,
+                        "zjxq_fbhtyfbl": zjxq_fbhtyfbl,
+                        "zjxq_jkye": zjxq_jkye,
+                        "zjxq_jsfs": zjxq_jsfs,
+                        "zjxq_lwhtbl": zjxq_lwhtbl,
+                        "zjxq_ysjfzbj": zjxq_ysjfzbj,
+                        "zjxq_clhtbl": zjxq_clhtbl,
+                        "zjxq_sjzczjbbz": zjxq_sjzczjbbz,
+                        "zjxq_jlkpje": zjxq_jlkpje,
+                        "zjxq_zbjdqr": zjxq_zbjdqr,
+                        "zjxq_yskbl": zjxq_yskbl,
+                        "zjxq_yfzbj": zjxq_yfzbj,
+                        "zjxq_wfzbj": zjxq_wfzbj
+                #test
+
                 }
     }
 if __name__ == "__main__":
