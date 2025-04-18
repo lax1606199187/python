@@ -820,65 +820,113 @@ def read_root(num:str):
                     "xmglf": [
                         {"xmglf_jhje": xmglf_jhje},
                         {"xmglf_jhje_jxs": xmglf_jhje_jxs},
+                        {"xmglf_htje": 0},
+                        {"xmglf_htje_jxs": 0},
                         {"xmglf_sfje": xmglf_sfje},
-                        {"xmglf_sfje_jxs": xmglf_sfje_jxs}
+                        {"xmglf_sfje_jxs": xmglf_sfje_jxs},
+                        {"xmglf_dfje": 0},
+                        {"xmglf_ddkjxs": 0}
+
                     ],
                     "ywf": [
                         {"ywf_jhje": ywf_jhje},
                         {"ywf_jhje_jxs": ywf_jhje_jxs},
+                        {"ywf_htje": 0},
+                        {"ywf_htje_jxs": 0},
                         {"ywf_sfje": ywf_sfje},
                         {"ywf_sfje_jxs": ywf_sfje_jxs},
+                        {"ywf_dfje": 0},
+                        {"ywf_ddkjxs": 0}
                     ],
                     "ptfwf": [
                         {"ptfwf_jhje": ptfwf_jhje},
                         {"ptfwf_jhje_jxs": ptfwf_jhje_jxs},
+                        {"ptfwf_htje": 0},
+                        {"ptfwf_htje_jxs": 0},
                         {"ptfwf_sfje": ptfwf_sfje},
                         {"ptfwf_sfje_jxs": ptfwf_sfje_jxs},
+                        {"ptfwf_dfje": 0},
+                        {"ptfwf_ddkjxs": 0}
                     ],
                     "zhse": [
                         {"zhse_jhje": zhse_jhje},
                         {"zhse_jhje_jxs": zhse_jhje_jxs},
+                        {"zhse_htje": 0},
+                        {"zhse_htje_jxs": 0},
                         {"zhse_sfje": zhse_sfje},
-                        {"zhse_sfje_jxs": zhse_sfje_jxs}
+                        {"zhse_sfje_jxs": zhse_sfje_jxs},
+                        {"zhse_dfje": 0},
+                        {"zhse_ddkjxs": 0}
                     ],
                     "cwfy": [
                         {"cwfy_jhje": cwfy_jhje},
                         {"cwfy_jhje_jxs": cwfy_jhje_jxs},
+                        {"cwfy_htje": 0},
+                        {"cwfy_htje_jxs": 0},
                         {"cwfy_sfje": cwfy_sfje},
                         {"cwfy_sfje_jxs": cwfy_sfje_jxs},
+                        {"cwfy_dfje": 0},
+                        {"cwfy_ddkjxs": 0}
                     ],
                     "wbf": [
                         {"wbf_jhje": wbf_jhje},
                         {"wbf_jhje_jxs": wbf_jhje_jxs},
+                        {"wbf_htje": 0},
+                        {"wbf_htje_jxs": 0},
                         {"wbf_sfje": wbf_sfje},
                         {"wbf_sfje_jxs": wbf_sfje_jxs},
+                        {"wbf_dfje": 0},
+                        {"wbf_ddkjxs": 0}
                     ],
                     "qt": [
                         {"qt_jhje": qt_jhje},
                         {"qt_jhje_jxs": qt_jhje_jxs},
+                        {"qt_htje": 0},
+                        {"qt_htje_jxs": 0},
                         {"qt_sfje": qt_sfje},
                         {"qt_sfje_jxs": qt_sfje_jxs},
+                        {"qt_dfje": 0},
+                        {"qt_ddkjxs": 0}
                     ],
                     "csf": [
                         {"csf_jhje": csf_jhje},
                         {"csf_jhje_jxs": csf_jhje_jxs},
+                        {"csf_htje": 0},
+                        {"csf_htje_jxs": 0},
                         {"csf_sfje": csf_sfje},
                         {"csf_sfje_jxs": csf_sfje_jxs},
+                        {"csf_dfje": 0},
+                        {"csf_ddkjxs": 0}
                     ],
                     "lrfp": [
                         {"lrfp_jhje": lrfp_jhje},
                         {"lrfp_jhje_jxs": lrfp_jhje_jxs},
+                        {"lrfp_htje": 0},
+                        {"lrfp_htje_jxs": 0},
                         {"lrfp_sfje": lrfp_sfje},
                         {"lrfp_sfje_jxs": lrfp_sfje_jxs},
+                        {"lrfp_dfje": 0},
+                        {"lrfp_ddkjxs": 0}
                     ],
                     "jjf": [
                         {"jjf_jhje": jjf_jhje},
                         {"jjf_jhje_jxs": jjf_jhje_jxs},
+                        {"jjf_htje": 0},
+                        {"jjf_htje_jxs": 0},
                         {"jjf_sfje": jjf_sfje},
                         {"jjf_sfje_jxs": jjf_sfje_jxs},
+                        {"jjf_dfje": 0},
+                        {"jjf_ddkjxs": 0}
                     ],
                     "jkye": [
-                        {"jkye_sfje": jkye_sfje}
+                        {"jkye_jhje": 0},
+                        {"jkye_jhje_jxs": 0},
+                        {"jkye_htje": 0},
+                        {"jkye_htje_jxs": 0},
+                        {"jkye_sfje": jkye_sfje},
+                        {"jkye_sfje_jxs": 0},
+                        {"jkye_dfje": 0},
+                        {"jkye_ddkjxs": 0}
                     ],
                     "xj": [
                         {"jhje_xj": jhje_xj},
