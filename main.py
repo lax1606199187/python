@@ -6,7 +6,7 @@ import uvicorn
 import json
 import requests
 
-#test
+#test123
 # 建立数据库连接
 conn = pymysql.connect(
     host='120.26.141.56',  # 主机名（或IP地址）
