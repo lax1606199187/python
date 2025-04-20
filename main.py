@@ -6,7 +6,6 @@ import uvicorn
 import json
 import requests
 
-#test123456
 # 建立数据库连接
 conn = pymysql.connect(
     host='120.26.141.56',  # 主机名（或IP地址）
@@ -33,6 +32,7 @@ app = FastAPI()
 #         cursorclass=pymysql.cursors.DictCursor  # 使用字典游标方便处理结果
 #     )
 
+#123
 @app.get("/qs")
 def read_root(num:str):
     # name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
@@ -486,7 +486,9 @@ def read_root(num:str):
             result = (('0', '0'), ())
         data = result[0]
         ysje = int(data[0] or 0)
-        a = ysje / sr
+        a=0
+        if sr!=0:
+            a = ysje / sr
         xmhk = int(a * 10000) / 100
         kb_sb_xmhkl = f"{xmhk}%"  # 结果为 "96.49%"
 
@@ -517,7 +519,9 @@ def read_root(num:str):
             result = (('0', '0'), ())
         data = result[0]
         kb_ssje = float(data[0] or 0)  # 实收金额
-        kb_sb_jhjeysjjebfb = f"{(kb_ssje / kb_jhje) * 100:.2f}%"
+        kb_sb_jhjeysjjebfb=0
+        if kb_jhje !=0.0:
+            kb_sb_jhjeysjjebfb = f"{(kb_ssje / kb_jhje) * 100:.2f}%"
 
         # 5.所有计划的计划税额与所有实际税额的百分比
         sql = "select ifnull(input_tax,0) from Project_Budgets where project_id='%s'" % (project_id)
@@ -625,7 +629,7 @@ def read_root(num:str):
         if result == ():
             result = (('0', '0'), ())
         data = result[0]
-        fxyj_bfb = data[0]
+        fxyj_bfb = float(data[0])
         xmzkf_fxyj_str = f"{(zjyl_xmsr_xmsr * (fxyj_bfb / 100)):.2f}"
         zjyl_xmzkf_fxyj = float(xmzkf_fxyj_str)  # 风险押金
         a = data[1]  # 资料押金
