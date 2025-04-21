@@ -32,10 +32,8 @@ app = FastAPI()
 #         cursorclass=pymysql.cursors.DictCursor  # 使用字典游标方便处理结果
 #     )
 
-#123
 @app.get("/qs")
 def read_root(num:str):
-    print("123")
     # name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
     # project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
@@ -46,6 +44,10 @@ def read_root(num:str):
     # project_id = '3209e90a-6705-cd2b-ce30-67c54bcea55d'
     # num = "QS2025-LY-SG006"
     try:
+        if not conn.open:
+            conn.connect()
+        conn.ping(reconnect=True)  # 重新连接如果断开
+
         # 创建游标对象
         cursor = conn.cursor()
 
@@ -628,7 +630,8 @@ def read_root(num:str):
         cursor.execute(sql)
         result = cursor.fetchall()
         if result == ():
-            result = (('0', '0'), ())
+            # result = (('0', '0','0','0'), ())
+            result = ((0, 0, 0, 0), ())
         data = result[0]
         fxyj_bfb = float(data[0])
         xmzkf_fxyj_str = f"{(zjyl_xmsr_xmsr * (fxyj_bfb / 100)):.2f}"
@@ -648,7 +651,7 @@ def read_root(num:str):
         cursor.execute(sql)
         result = cursor.fetchall()
         if result == ():
-            result = (('0', '0'), ())
+            result = ((0, 0), ())
         data = result[0]
         fxyj_jjf_bfb = data[0]
         xmzkf_xmsr = zxfbje_sfje
@@ -706,8 +709,9 @@ def read_root(num:str):
         # 分包合同已付比例
         zjxq_htje = zxfbje_htje
         zjxq_yfje = zxfbje_sfje
-
-        zjxq_fbhtyfbl = f"{(zjxq_yfje / zjxq_htje) * 100:.2f}%"  # 分包合同已付比例
+        zjxq_fbhtyfbl=0
+        if zjxq_yfje!=0.0:
+            zjxq_fbhtyfbl = f"{(zjxq_yfje / zjxq_htje) * 100:.2f}%"  # 分包合同已付比例
 
         # 借款余额
         sql = "select ifnull(sum(balance),0) from Loans where project_id='%s'" % (project_id)
@@ -750,8 +754,9 @@ def read_root(num:str):
             result = (('0', '0'), ())
         data = result[0]
         zjxq_lw_ht_sl = float(data[0])  # %3劳务合同数量
-
-        zjxq_lwhtbl = f"{(zjxq_lw_ht_sl / zjxq_htzs) * 100:.2f}%"
+        zjxq_lwhtbl=0
+        if zjxq_htzs!=0.0:
+            zjxq_lwhtbl = f"{(zjxq_lw_ht_sl / zjxq_htzs) * 100:.2f}%"
 
         # 应收甲方质保金
         sql = "select ifnull(sum(invoice_balance),0) from ARs where project_id='%s' and zhibaojin=1" % (project_id)
@@ -771,11 +776,14 @@ def read_root(num:str):
             result = (('0', '0'), ())
         data = result[0]
         zjxq_cl_ht_sl = float(data[0])  # %13材料合同数量
-
-        zjxq_clhtbl = f"{(zjxq_cl_ht_sl / zjxq_htzs) * 100:.2f}%"
+        zjxq_clhtbl=0
+        if zjxq_htzs!=0.0:
+            zjxq_clhtbl = f"{(zjxq_cl_ht_sl / zjxq_htzs) * 100:.2f}%"
 
         # 实际注册占计划比值：
-        zjxq_sjzczjbbz = f"{(sfje_xj / jhje_xj) * 100:.2f}%"  # 实际注册占计划比值：
+        zjxq_sjzczjbbz=0
+        if jhje_xj != 0.0:
+            zjxq_sjzczjbbz = f"{(sfje_xj / jhje_xj) * 100:.2f}%"  # 实际注册占计划比值：
 
         # 累计开票金额
         sql = "select ifnull(sum(amount),0) from Purchase_Invoices where approval_status='Approval' and project_id='%s'" % (
@@ -798,7 +806,9 @@ def read_root(num:str):
         zjxq_zbjdqr = data[0]  # 质保金到期日
 
         # 已收款比例
-        zjxq_yskbl = f"{(gcsr_ssje / gcsr_htje * 100):.2f}%" if gcsr_htje != 0 else "0.00%"  # 已收款比例
+        zjxq_yskbl=0
+        if gcsr_htje !=0.0:
+            zjxq_yskbl = f"{(gcsr_ssje / gcsr_htje * 100):.2f}%" if gcsr_htje != 0 else "0.00%"  # 已收款比例
 
         # 应付质保金、未付质保金
         sql = "select ifnull(sum(amount),0),ifnull(sum(payment_balance),0) from APs where project_id='%s' and approval_status='Approval' and zhibaojin=1" % (
