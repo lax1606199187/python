@@ -7,21 +7,21 @@ import json
 import requests
 
 # 建立数据库连接
-# conn = pymysql.connect(
-#     host='120.26.141.56',  # 主机名（或IP地址）
-#     port=3306,  # 端口号，默认为3306
-#     user='test',  # 用户名
-#     password='HgSs9op0',  # 密码
-#     charset='utf8mb4'  # 设置字符编码
-# )
-
 conn = pymysql.connect(
-    host='117.50.71.127',  # 主机名（或IP地址）
+    host='120.26.141.56',  # 主机名（或IP地址）
     port=3306,  # 端口号，默认为3306
-    user='qstest',  # 用户名
-    password='qingshi123',  # 密码
+    user='test',  # 用户名
+    password='HgSs9op0',  # 密码
     charset='utf8mb4'  # 设置字符编码
 )
+
+# conn = pymysql.connect(
+#     host='117.50.71.127',  # 主机名（或IP地址）
+#     port=3306,  # 端口号，默认为3306
+#     user='qstest',  # 用户名
+#     password='qingshi123',  # 密码
+#     charset='utf8mb4'  # 设置字符编码
+# )
 
 
 app = FastAPI()
@@ -61,8 +61,8 @@ def read_root(num:str):
         cursor = conn.cursor()
 
         # 选择数据库
-        # conn.select_db("test")
-        conn.select_db("qingshi")
+        conn.select_db("test")
+        # conn.select_db("qingshi")
         #
         sql = "select b.id,b.name from Contracts a INNER JOIN Project b on a.id=b.contract_id where a.num='%s'" % (num)
         cursor.execute(sql)
@@ -179,13 +179,8 @@ def read_root(num:str):
         # cgje_sfje_jxs= float(data[1] or 0)
 
         # 专项分包金额-待付款金额、待抵扣进项税
-        sql = "select ifnull(sum(payment_balance),0) from APs where project_id='%s'" % (project_id)
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        if result == ():
-            result = (('0', '0'), ())
-        data = result[0]
-        zxfbje_dfje = float(data[0] or 0)
+
+        zxfbje_dfje = round(zxfbje_htje-zxfbje_sfje, 2)
 
         zxfbje_ddkjxs = round((zxfbje_htje_jxs - zxfbje_sfje_jxs), 2)
 
