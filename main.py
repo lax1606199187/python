@@ -7,14 +7,21 @@ import json
 import requests
 
 # 建立数据库连接
+# conn = pymysql.connect(
+#     host='120.26.141.56',  # 主机名（或IP地址）
+#     port=3306,  # 端口号，默认为3306
+#     user='test',  # 用户名
+#     password='HgSs9op0',  # 密码
+#     charset='utf8mb4'  # 设置字符编码
+# )
+
 conn = pymysql.connect(
-    host='120.26.141.56',  # 主机名（或IP地址）
+    host='117.50.71.127',  # 主机名（或IP地址）
     port=3306,  # 端口号，默认为3306
-    user='test',  # 用户名
-    password='HgSs9op0',  # 密码
+    user='qstest',  # 用户名
+    password='qingshi123',  # 密码
     charset='utf8mb4'  # 设置字符编码
 )
-#
 
 
 app = FastAPI()
@@ -32,8 +39,10 @@ app = FastAPI()
 #         cursorclass=pymysql.cursors.DictCursor  # 使用字典游标方便处理结果
 #     )
 
+#123
 @app.get("/qs")
 def read_root(num:str):
+    print("123")
     # name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
     # project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
@@ -52,7 +61,8 @@ def read_root(num:str):
         cursor = conn.cursor()
 
         # 选择数据库
-        conn.select_db("test")
+        # conn.select_db("test")
+        conn.select_db("qingshi")
         #
         sql = "select b.id,b.name from Contracts a INNER JOIN Project b on a.id=b.contract_id where a.num='%s'" % (num)
         cursor.execute(sql)
@@ -576,7 +586,13 @@ def read_root(num:str):
               kb_sb_jhxjcsysjxjcsdb)
 
         # 资金预览--项目收入--项目收入、其他收入
-        zjyl_xmsr_xmsr = zxfbje_sfje  # 项目收入
+        sql = "select ifnull(sum(amount),0) from Collections where project_id='%s' and ar_type='ARs'" % (project_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        if result == ():
+            result = (('0', '0'), ())
+        data = result[0]
+        zjyl_xmsr_xmsr = float(data[0])  # 项目收入
 
         sql = "select ifnull(sum(amount),0) from Other_ARs where project_id='%s'" % (project_id)
         cursor.execute(sql)
@@ -616,7 +632,7 @@ def read_root(num:str):
         data = result[0]
         zjyl_xmzc_kpsf = float(data[0])  # 开票税费
 
-        sql = "select ifnull(sum(balance),2) from Loans where  project_id='%s' and approval_status='Approval' " % (
+        sql = "select ifnull(sum(balance),0) from Loans where  project_id='%s' and approval_status='Approval' " % (
             project_id)
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -642,10 +658,10 @@ def read_root(num:str):
 
         zjyl_xmzkf_lybzj = 0  # 履约保证金
 
-        xmzkf_zlyj_str = f"{(zjyl_xmsr_xmsr * (a / 100)):.2f}"
-        zjyl_xmzkf_zlyj = float(xmzkf_zlyj_str)  # 资料押金
-        xmzkf_qtyj_str = f"{(zjyl_xmsr_xmsr * (b / 100)):.2f}"
-        zjyl_xmzkf_qtyj = float(xmzkf_qtyj_str)  # 其他押金
+        # xmzkf_zlyj_str = f"{(zjyl_xmsr_xmsr * (a / 100)):.2f}"
+        zjyl_xmzkf_zlyj = float(a)  # 资料押金
+        # xmzkf_qtyj_str = f"{(zjyl_xmsr_xmsr * (b / 100)):.2f}"
+        zjyl_xmzkf_qtyj = float(b)  # 其他押金
 
         sql = "select ifnull(zkywf,0) from project where name='%s' " % (name)
         cursor.execute(sql)
@@ -654,7 +670,7 @@ def read_root(num:str):
             result = ((0, 0), ())
         data = result[0]
         fxyj_jjf_bfb = data[0]
-        xmzkf_xmsr = zxfbje_sfje
+        xmzkf_xmsr = zjyl_xmsr_xmsr
         xmzkf_fxyj_ze = f"{(xmzkf_xmsr * (fxyj_jjf_bfb / 100)):.2f}"
 
         zjyl_xmzkf_jjf = float(xmzkf_fxyj_ze) - float(jjf_sfje)  # 居间费
@@ -673,7 +689,7 @@ def read_root(num:str):
 
         # 资金预览--管理费-已收管理费
         glf_xmsr_bfb = zjyl_xmzkf_xmglf
-        glf_xmsr = zxfbje_sfje
+        glf_xmsr = zjyl_xmsr_xmsr
         glf_ysglf_str = f"{(glf_xmsr * (glf_xmsr_bfb / 100)):.2f}"  # 风险押金
         zjyl_glf_ysglf = float(glf_ysglf_str)
 
@@ -732,9 +748,9 @@ def read_root(num:str):
         zjxq_jsfs_code = float(data[0])
         zjxq_jsfs = ""  # 计税方式
         if zjxq_jsfs_code == 1:
-            zjxq_jsfs = '简易计税'
-        if zjxq_jsfs_code == 2:
             zjxq_jsfs = '一般计税'
+        if zjxq_jsfs_code == 2:
+            zjxq_jsfs = '简易计税'
 
         # #劳务合同比例
         sql = "select ifnull(count(*),0) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s'" % (
@@ -746,7 +762,7 @@ def read_root(num:str):
         data = result[0]
         zjxq_htzs = float(data[0])  # 合同总数
 
-        sql = "select ifnull(count(b.tax_rate),0) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =3.00 GROUP BY b.tax_rate ORDER BY tax_rate" % (
+        sql = "select ifnull(count(b.tax_rate),0) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and b.tax_rate =3.00 GROUP BY b.tax_rate ORDER BY b.tax_rate" % (
             project_id)
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -768,7 +784,7 @@ def read_root(num:str):
         zjxq_ysjfzbj = float(data[0])  # 应收甲方质保金
 
         # 材料合同（13%）比例
-        sql = "select ifnull(count(b.tax_rate),0) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and tax_rate =13.00 GROUP BY b.tax_rate ORDER BY tax_rate" % (
+        sql = "select ifnull(count(b.tax_rate),0) from Subcontracts a inner join subcontract_items b on a.id=b.parent_id where approval_status='Approval' and a.project_id='%s' and b.tax_rate =13.00 GROUP BY b.tax_rate ORDER BY b.tax_rate" % (
             project_id)
         cursor.execute(sql)
         result = cursor.fetchall()
