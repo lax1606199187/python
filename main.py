@@ -17,7 +17,7 @@ conn = pymysql.connect(
 
 # conn = pymysql.connect(
 #     host='117.50.71.127',  # 主机名（或IP地址）
-#     port=3306,  # 端口号，默认为3306
+#     port=3315,
 #     user='qstest',  # 用户名
 #     password='qingshi123',  # 密码
 #     charset='utf8mb4'  # 设置字符编码
@@ -42,7 +42,6 @@ app = FastAPI()
 #123
 @app.get("/qs")
 def read_root(num:str):
-    print("123")
     # name = '金银湖大厦五层餐饮中心、六层会议中心及包房室内装饰土建安装工程'
     # project_id = 'acd2a89d-cbc7-29c1-9fcd-63772c33f81a'
 
@@ -85,7 +84,7 @@ def read_root(num:str):
         gcsr_jhje_xxs = float(data[1] or 0)  # 销项税
 
         # 工程收入--合同金额、销项税
-        sql = "select ifnull(recent_amount,0) from Contracts where  name='%s'" % (name)
+        sql = "select ifnull(a.recent_amount,0) from Contracts a INNER JOIN project b on a.id=b.contract_id where b.name ='%s'" % (name)
         cursor.execute(sql)
         result = cursor.fetchall()
         if result == ():
